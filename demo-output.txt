@@ -1,0 +1,128 @@
+--- step1_small
+The pattern called "target", as it should be:
+      ######          ########                            ######
+    ######        ########          ################            
+  ######        ######          ##########################      
+########      ######        ########                  ########  
+######        ######      ########        ######        ########
+######      ########      ######      ##############      ######
+######      ########      ######      ############        ######
+######        ######      ########                      ######  
+  ######      ########      ##########              ########    
+  ########      ########        ##########################      
+    ########      ##########            ##########            ##
+      ########        ##########                        ########
+##      ##########          ##################################  
+####        ##########              ##################          
+########        ############                                  ##
+  ##########          ##########################################
+
+As the small network paints it:
+      ######################                ########      ######
+    ##################                ##############            
+  ##############              ##############  ######      ##    
+######                  ##############      ####      ########  
+######                    ########        ######################
+######        ######    ########        ############      ######
+########          ######  ######        ##########      ########
+########      ######      ######      ####              ########
+########    ####            ########    ####        ############
+  ############    ####      ####      ####################      
+    ########################          ####    ##############    
+      ####  ##      ##############    ######                  ##
+      ####      ################  ############################  
+######      ####################  ################  ########    
+############      ##############                            ####
+############    ################################################
+
+Numbers in the middle layer: 2,112
+Multiplications for one point: 2,048
+Points painted correctly, all sixteen pages: 91.5 %
+  target     72.7 %
+  grid       74.7 %
+  waves      76.8 %
+  zigzag     80.7 %
+  rings      88.6 %
+  spiral     93.7 %
+  diagonal   94.4 %
+  checkers   95.5 %
+  dots       96.1 %
+  stripes    96.7 %
+  frame      97.6 %
+  windmill   98.4 %
+  moon       98.8 %
+  triangle   99.4 %
+  cross      99.6 %
+  disc       99.7 %
+--- step2_bigger
+                numbers  work per point   correct
+small             2,112           2,048     91.5 %
+four times        8,352           8,192     96.2 %
+
+The wide network does 4 times the multiplications for every single point.
+--- step3_experts
+Router scores for one point of the target page:
+  -0.14  +0.82  -0.67  +1.50  -0.77  -1.49  -1.20  +0.12
+Chosen experts: [1, 3]  their shares: [0.34, 0.66]
+
+                numbers  work per point   correct
+small             2,112           2,048     91.5 %
+four times        8,352           8,192     96.2 %
+eight experts     8,832           2,304     95.2 %
+
+Work of the experts: 32 x 8 for the router + 2 experts x 1,024 = 2,304
+--- step4_inside
+Share of each page that goes to each expert (percent). Two experts work on every point, so a row adds up to 200.
+
+              E1    E2    E3    E4    E5    E6    E7    E8
+stripes       87    28     .    34     .    14    24    13
+checkers      20    13    60    68     .    15    16     7
+rings          .    52     1    73    25    29     .    20
+disc           .     8     .     3    77    20    74    18
+spiral         .    68     .    31     7    21     .    72
+cross          .     .    90    67     .    31     3     8
+dots          26    37    48     1    12    43     7    26
+diagonal       .    38     .    76     8    13    27    37
+target         9    68     .    84    12    11     4    13
+windmill      19     .     4    41    33    35    31    37
+waves          9    91    24    38     .    17     .    22
+frame          2    17     .    75    51    13     1    41
+triangle       .    11    44    27    59    20    17    22
+zigzag         .    27     9    73    37    18    10    26
+moon           .     .     1    57    55    16     9    62
+grid           .    87     9    84     4     4    11     1
+all pages     11    34    18    52    24    20    15    27
+
+Busiest expert: 52 % of all points. Laziest: 11 %.
+--- step5_asleep
+8 experts   numbers   8,832  work 2,304  correct 95.2 %  asleep 0
+   share of the points per expert: 11 34 18 52 24 20 15 27
+16 experts  numbers  17,664  work 2,560  correct 94.3 %  asleep 6
+   share of the points per expert: 22 31 23 19 0 20 18 0 0 0 1 22 13 0 22 8
+
+6 of 16 experts get fewer than 1 point in 100: numbers 6,624 that are stored and never used.
+--- step6_balance
+              rule   correct  asleep   share of the points per expert
+  8 experts    off     95.2 %       0   11 34 18 52 24 20 15 27
+  8 experts     on     95.5 %       0   22 31 26 24 23 26 26 23
+ 16 experts    off     94.3 %       6   22 31 23 19 0 20 18 0 0 0 1 22 13 0 22 8
+ 16 experts     on     95.2 %       0   7 20 19 10 10 17 5 16 16 7 11 13 11 16 13 10
+--- step7_scale
+ experts  numbers  work per point   correct  asleep
+       2    2,208           2,112     91.4 %       0
+       4    4,416           2,176     93.8 %       0
+       8    8,832           2,304     95.5 %       0
+      16   17,664           2,560     95.2 %       0
+      32   35,328           3,072     96.1 %       6
+    wide    8,352           8,192     96.2 %
+
+32 experts store 4.2 times the numbers of the wide network and do 38 % of its work.
+--- tests
+ok   test_balance_rule_evens_the_shares
+ok   test_every_point_goes_to_k_experts
+ok   test_gradient_signs_match_numbers
+ok   test_one_expert_is_a_plain_network
+ok   test_patterns_have_ink_and_paper
+ok   test_training_learns
+ok   test_work_count
+7 checks passed
